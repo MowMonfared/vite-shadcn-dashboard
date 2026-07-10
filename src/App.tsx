@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
+import { SectionCards } from '@/components/section-cards';
 import { devices } from './data/devices';
 
 function App() {
@@ -37,6 +37,7 @@ function App() {
           </header>
 
           <main className="p-6">
+            <SectionCards />
             <Table>
               <TableHeader>
                 <TableRow>
