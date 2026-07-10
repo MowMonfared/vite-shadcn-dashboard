@@ -30,7 +30,6 @@ function App() {
     <TooltipProvider>
       <SidebarProvider>
         <AppSidebar />
-
         <SidebarInset>
           <header className="flex h-16 items-center border-b px-4">
             <SidebarTrigger />
@@ -47,7 +46,7 @@ function App() {
                   <TableHead>Status</TableHead>
                   <TableHead>Return Date</TableHead>
                   <TableHead>Department</TableHead>
-                  <TableHead className="sticky right-0 bg-gray-100 text-right z-20">
+                  <TableHead className="sticky right-0 bg-olive-50 text-right z-20">
                     Actions
                   </TableHead>
                 </TableRow>
