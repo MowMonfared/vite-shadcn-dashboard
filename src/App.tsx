@@ -47,7 +47,9 @@ function App() {
                   <TableHead>Status</TableHead>
                   <TableHead>Return Date</TableHead>
                   <TableHead>Department</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="sticky right-0 bg-gray-100 text-right z-20">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -61,7 +63,7 @@ function App() {
                     <TableCell>{device.status}</TableCell>
                     <TableCell>{device.dueDate}</TableCell>
                     <TableCell>{device.department}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="sticky right-0 bg-white text-right z-10">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
