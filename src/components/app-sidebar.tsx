@@ -29,8 +29,8 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: 'shadcn',
-    email: 'm@example.com',
+    name: 'Momo',
+    email: 'monfared.m@assetgrid.com',
     avatar: '/avatars/shadcn.jpg',
   },
   teams: [
@@ -98,8 +98,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-        Test
+        <img src="/logo.svg" alt="IT Portal" className="size-32 h-8" />
+        <div className="flex items-center pl-8 text-sm text-gray-500">
+          Every Asset. One Grid.
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={data.projects} />

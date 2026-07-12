@@ -42,7 +42,7 @@ function App() {
         <SidebarInset>
           <header className="flex h-16 items-center border-b px-4">
             <SidebarTrigger />
-            <h1 className="ml-4 text-xl font-semibold">Dashboard</h1>
+            <h1 className="ml-4 text-xl font-semibold">Departments</h1>
           </header>
 
           <main className="p-6">
