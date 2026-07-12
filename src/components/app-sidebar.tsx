@@ -99,6 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
+        Test
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={data.projects} />
