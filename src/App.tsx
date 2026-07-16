@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { AddDevice } from './components/add-device';
 import { SectionCards } from '@/components/section-cards';
 import { devices } from './data/devices';
