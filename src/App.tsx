@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { AddDevice } from './components/add-device';
 import { SectionCards } from '@/components/section-cards';
 import { devices } from './data/devices';
 
@@ -47,10 +48,7 @@ function App() {
 
           <main className="p-6">
             <SectionCards />
-            <div className="pb-3 flex w-full items-end justify-between">
-              <Button variant="outline" size="lg">
-                Test
-              </Button>
+            <div className="pb-3 flex w-full items-end justify-end">
               <div className="flex gap-3 items-end">
                 <Field className="w-full max-w-48 ">
                   <FieldLabel>Status</FieldLabel>
@@ -90,10 +88,7 @@ function App() {
                     </SelectContent>
                   </Select>
                 </Field>
-                <Button size="lg">
-                  <Plus />
-                  Add
-                </Button>
+                <AddDevice />
               </div>
             </div>
             <Table>
