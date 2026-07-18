@@ -1,12 +1,22 @@
+import { useState } from 'react';
+import { MoreHorizontalIcon } from 'lucide-react';
+
 import { AppSidebar } from '@/components/app-sidebar';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { MoreHorizontalIcon, Plus } from 'lucide-react';
+import { AddDevice } from '@/components/add-device';
+import { SectionCards } from '@/components/section-cards';
+
 import { Button } from '@/components/ui/button';
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,14 +24,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+
+import { Field, FieldLabel } from '@/components/ui/field';
+
 import {
   Select,
   SelectContent,
@@ -30,16 +35,65 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
-import { AddDevice } from './components/add-device';
-import { SectionCards } from '@/components/section-cards';
+
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
+import { TooltipProvider } from '@/components/ui/tooltip';
+
 import { devices } from './data/devices';
 
+type Device = (typeof devices)[number];
+
+function DeviceDetail({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | null | undefined;
+}) {
+  return (
+    <div className="space-y-1">
+      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="font-medium">{value || '—'}</p>
+    </div>
+  );
+}
+
 function App() {
+  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  function openDeviceDrawer(device: Device) {
+    setSelectedDevice(device);
+    setDrawerOpen(true);
+  }
+
+  function handleDrawerOpenChange(open: boolean) {
+    setDrawerOpen(open);
+
+    if (!open) {
+      setSelectedDevice(null);
+    }
+  }
+
   return (
     <TooltipProvider>
       <SidebarProvider>
         <AppSidebar />
+
         <SidebarInset>
           <header className="flex h-16 items-center border-b px-4">
             <SidebarTrigger />
@@ -48,17 +102,20 @@ function App() {
 
           <main className="p-6">
             <SectionCards />
-            <div className="pb-3 flex w-full items-end justify-end">
-              <div className="flex gap-3 items-end">
-                <Field className="w-full max-w-48 ">
+
+            <div className="flex w-full items-end justify-end pb-3">
+              <div className="flex items-end gap-3">
+                <Field className="w-full max-w-48">
                   <FieldLabel>Status</FieldLabel>
+
                   <Select>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Please Select" />
                     </SelectTrigger>
+
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="">All</SelectItem>
+                        <SelectItem value="all">All</SelectItem>
                         <SelectItem value="Active">Active</SelectItem>
                         <SelectItem value="In Repair">In Repair</SelectItem>
                         <SelectItem value="Retired">Retired</SelectItem>
@@ -72,78 +129,170 @@ function App() {
                     </SelectContent>
                   </Select>
                 </Field>
-                <Field className="w-full max-w-48 ">
+
+                <Field className="w-full max-w-48">
                   <FieldLabel>Device</FieldLabel>
+
                   <Select>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Please Select" />
                     </SelectTrigger>
+
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="">All</SelectItem>
-                        <SelectItem value="LapTop">LapTop</SelectItem>
+                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="Laptop">Laptop</SelectItem>
                         <SelectItem value="Mobile">Mobile</SelectItem>
                         <SelectItem value="Tablet">Tablet</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                 </Field>
+
                 <AddDevice />
               </div>
             </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Device</TableHead>
-                  <TableHead>Model</TableHead>
-                  <TableHead>Employee</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Return Date</TableHead>
-                  <TableHead>Department</TableHead>
-                  <TableHead className="sticky right-0 bg-olive-50 text-right z-20">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {devices.map((device) => (
-                  <TableRow key={device.id}>
-                    <TableCell className="font-medium">
-                      {device.device}
-                    </TableCell>
-                    <TableCell>{device.model}</TableCell>
-                    <TableCell>{device.assignee}</TableCell>
-                    <TableCell>{device.status}</TableCell>
-                    <TableCell>{device.dueDate}</TableCell>
-                    <TableCell>{device.department}</TableCell>
-                    <TableCell className="sticky right-0 bg-white text-right z-10">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8"
-                          >
-                            <MoreHorizontalIcon />
-                            <span className="sr-only">Open menu</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem variant="destructive">
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+
+            <div className="overflow-hidden rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Device</TableHead>
+                    <TableHead>Model</TableHead>
+                    <TableHead>Employee</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Return Date</TableHead>
+                    <TableHead>Department</TableHead>
+
+                    <TableHead className="sticky right-0 z-20 bg-olive-50 text-right">
+                      Actions
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+
+                <TableBody>
+                  {devices.map((device) => (
+                    <TableRow key={device.id}>
+                      <TableCell className="font-medium">
+                        {device.device}
+                      </TableCell>
+
+                      <TableCell className="p-0">
+                        <button
+                          type="button"
+                          onClick={() => openDeviceDrawer(device)}
+                          className="flex w-full items-center px-4 py-3 text-left font-medium underline-offset-4 hover:bg-muted/50 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                        >
+                          {device.model}
+                        </button>
+                      </TableCell>
+
+                      <TableCell>{device.assignee}</TableCell>
+                      <TableCell>{device.status}</TableCell>
+                      <TableCell>{device.dueDate}</TableCell>
+                      <TableCell>{device.department}</TableCell>
+
+                      <TableCell className="sticky right-0 z-10 bg-background text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-8"
+                            >
+                              <MoreHorizontalIcon />
+
+                              <span className="sr-only">
+                                Open actions for {device.model}
+                              </span>
+                            </Button>
+                          </DropdownMenuTrigger>
+
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onSelect={() => openDeviceDrawer(device)}
+                            >
+                              Edit
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+
+                            <DropdownMenuSeparator />
+
+                            <DropdownMenuItem variant="destructive">
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </main>
         </SidebarInset>
+
+        <Drawer
+          open={drawerOpen}
+          onOpenChange={handleDrawerOpenChange}
+          direction="right"
+        >
+          <DrawerContent className="h-full w-[480px] max-w-[90vw] rounded-none">
+            {selectedDevice && (
+              <>
+                <DrawerHeader className="border-b text-left">
+                  <DrawerTitle>{selectedDevice.model}</DrawerTitle>
+
+                  <DrawerDescription>
+                    Device assignment and status information.
+                  </DrawerDescription>
+                </DrawerHeader>
+
+                <div className="flex-1 overflow-y-auto p-6">
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <DeviceDetail
+                      label="Device"
+                      value={selectedDevice.device}
+                    />
+
+                    <DeviceDetail label="Model" value={selectedDevice.model} />
+
+                    <DeviceDetail
+                      label="Employee"
+                      value={selectedDevice.assignee}
+                    />
+
+                    <DeviceDetail
+                      label="Status"
+                      value={selectedDevice.status}
+                    />
+
+                    <DeviceDetail
+                      label="Return date"
+                      value={selectedDevice.dueDate}
+                    />
+
+                    <DeviceDetail
+                      label="Department"
+                      value={selectedDevice.department}
+                    />
+                  </div>
+                </div>
+
+                <DrawerFooter className="border-t">
+                  <Button type="button">Edit device</Button>
+
+                  <DrawerClose asChild>
+                    <Button type="button" variant="outline">
+                      Close
+                    </Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </>
+            )}
+          </DrawerContent>
+        </Drawer>
       </SidebarProvider>
     </TooltipProvider>
   );
