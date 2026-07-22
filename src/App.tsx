@@ -91,8 +91,9 @@ function DeviceDetail({
 function App() {
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+  const [search, setSearch] = useState('');
 
   function openDeviceDrawer(device: Device) {
     setSelectedDevice(device);
@@ -108,24 +109,41 @@ function App() {
   }
 
   {
-    /*const filteredDevices = devices.filter((item) => {
+    /* const filteredDevices = devices.filter((device) => {
     const matchesDept =
-      selectedDept === 'All Departments' || item.department === selectedDept;
+      selectedDept === 'All Departments' || device.department === selectedDept;
 
     const matchesStatus =
-      selectedStatus.length === 0 || selectedStatus.includes(item.status);
+      selectedStatus.length === 0 || selectedStatus.includes(device.status);
 
     const matchesType =
-      selectedTypes.length === 0 || selectedTypes.includes(item.type);
+      selectedTypes.length === 0 || selectedTypes.includes(device.device);
 
     const matchesSearch =
-      item.device.toLowerCase().includes(search.toLowerCase()) ||
-      item.model.toLowerCase().includes(search.toLowerCase()) ||
-      item.employee.toLowerCase().includes(search.toLowerCase());
+      device.device.toLowerCase().includes(search.toLowerCase()) ||
+      device.model.toLowerCase().includes(search.toLowerCase()) ||
+      device.employee.toLowerCase().includes(search.toLowerCase());
 
     return matchesDept && matchesStatus && matchesType && matchesSearch;
-  });*/
+  });
+
+  */
   }
+
+  const filteredDevices = devices.filter((device) => {
+    const matchesStatus =
+      selectedStatus === 'all' || device.status === selectedStatus;
+
+    const matchesType =
+      selectedType === 'all' || device.device === selectedType;
+
+    const matchesSearch =
+      device.device.toLowerCase().includes(search.toLowerCase()) ||
+      device.model.toLowerCase().includes(search.toLowerCase()) ||
+      device.assignee.toLowerCase().includes(search.toLowerCase());
+
+    return matchesStatus && matchesType && matchesSearch;
+  });
 
   return (
     <TooltipProvider>
@@ -144,7 +162,11 @@ function App() {
             <div className="flex w-full items-end pb-3">
               <div className="flex w-full items-end gap-3">
                 <InputGroup className="w-48">
-                  <InputGroupInput placeholder="Search..." />
+                  <InputGroupInput
+                    placeholder="Search..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
                   <InputGroupAddon>
                     <SearchIcon />
                   </InputGroupAddon>
@@ -152,7 +174,10 @@ function App() {
                 <Field className="w-full max-w-48">
                   <FieldLabel>Status</FieldLabel>
 
-                  <Select>
+                  <Select
+                    value={selectedStatus}
+                    onValueChange={setSelectedStatus}
+                  >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Please Select" />
                     </SelectTrigger>
@@ -176,7 +201,7 @@ function App() {
                 <Field className="w-full max-w-48">
                   <FieldLabel>Device</FieldLabel>
 
-                  <Select>
+                  <Select value={selectedType} onValueChange={setSelectedType}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Please Select" />
                     </SelectTrigger>
@@ -214,26 +239,26 @@ function App() {
                 </TableHeader>
 
                 <TableBody>
-                  {devices.map((device) => (
-                    <TableRow key={device.id}>
+                  {filteredDevices.map((filtered) => (
+                    <TableRow key={filtered.id}>
                       <TableCell className="font-medium">
-                        {device.device}
+                        {filtered.device}
                       </TableCell>
 
                       <TableCell className="p-0">
                         <button
                           type="button"
-                          onClick={() => openDeviceDrawer(device)}
+                          onClick={() => openDeviceDrawer(filtered)}
                           className="flex w-full items-center px-4 py-3 text-left font-medium underline-offset-4 hover:bg-muted/50 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                         >
-                          {device.model}
+                          {filtered.model}
                         </button>
                       </TableCell>
 
-                      <TableCell>{device.assignee}</TableCell>
-                      <TableCell>{device.status}</TableCell>
-                      <TableCell>{device.dueDate}</TableCell>
-                      <TableCell>{device.department}</TableCell>
+                      <TableCell>{filtered.assignee}</TableCell>
+                      <TableCell>{filtered.status}</TableCell>
+                      <TableCell>{filtered.dueDate}</TableCell>
+                      <TableCell>{filtered.department}</TableCell>
 
                       <TableCell className="sticky right-0 z-10 bg-background text-right">
                         <DropdownMenu>
@@ -246,14 +271,14 @@ function App() {
                               <MoreHorizontalIcon />
 
                               <span className="sr-only">
-                                Open actions for {device.model}
+                                Open actions for {filtered.model}
                               </span>
                             </Button>
                           </DropdownMenuTrigger>
 
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
-                              onSelect={() => openDeviceDrawer(device)}
+                              onSelect={() => openDeviceDrawer(filtered)}
                             >
                               Edit
                             </DropdownMenuItem>
