@@ -103,7 +103,6 @@ export function AddDevice() {
           </div>
 
           {/* Status type */}
-          {/* Status */}
           <Field>
             <FieldLabel>Status</FieldLabel>
             <RadioGroup

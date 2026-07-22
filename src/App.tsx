@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreHorizontalIcon } from 'lucide-react';
+import { MoreHorizontalIcon, SearchIcon } from 'lucide-react';
 
 import { AppSidebar } from '@/components/app-sidebar';
 import { AddDevice } from '@/components/add-device';
@@ -50,6 +50,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from '@/components/ui/combobox';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+  InputGroupTextarea,
+} from '@/components/ui/input-group';
 
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -75,6 +91,8 @@ function DeviceDetail({
 function App() {
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
 
   function openDeviceDrawer(device: Device) {
     setSelectedDevice(device);
@@ -87,6 +105,26 @@ function App() {
     if (!open) {
       setSelectedDevice(null);
     }
+  }
+
+  {
+    /*const filteredDevices = devices.filter((item) => {
+    const matchesDept =
+      selectedDept === 'All Departments' || item.department === selectedDept;
+
+    const matchesStatus =
+      selectedStatus.length === 0 || selectedStatus.includes(item.status);
+
+    const matchesType =
+      selectedTypes.length === 0 || selectedTypes.includes(item.type);
+
+    const matchesSearch =
+      item.device.toLowerCase().includes(search.toLowerCase()) ||
+      item.model.toLowerCase().includes(search.toLowerCase()) ||
+      item.employee.toLowerCase().includes(search.toLowerCase());
+
+    return matchesDept && matchesStatus && matchesType && matchesSearch;
+  });*/
   }
 
   return (
@@ -103,8 +141,14 @@ function App() {
           <main className="p-6">
             <SectionCards />
 
-            <div className="flex w-full items-end justify-end pb-3">
-              <div className="flex items-end gap-3">
+            <div className="flex w-full items-end pb-3">
+              <div className="flex w-full items-end gap-3">
+                <InputGroup className="w-48">
+                  <InputGroupInput placeholder="Search..." />
+                  <InputGroupAddon>
+                    <SearchIcon />
+                  </InputGroupAddon>
+                </InputGroup>
                 <Field className="w-full max-w-48">
                   <FieldLabel>Status</FieldLabel>
 
@@ -129,7 +173,6 @@ function App() {
                     </SelectContent>
                   </Select>
                 </Field>
-
                 <Field className="w-full max-w-48">
                   <FieldLabel>Device</FieldLabel>
 
@@ -148,11 +191,11 @@ function App() {
                     </SelectContent>
                   </Select>
                 </Field>
-
-                <AddDevice />
               </div>
+              <AddDevice />
             </div>
 
+            {/* Table content */}
             <div className="overflow-hidden rounded-lg border">
               <Table>
                 <TableHeader>
