@@ -108,27 +108,14 @@ function App() {
     }
   }
 
-  {
-    /* const filteredDevices = devices.filter((device) => {
-    const matchesDept =
-      selectedDept === 'All Departments' || device.department === selectedDept;
-
-    const matchesStatus =
-      selectedStatus.length === 0 || selectedStatus.includes(device.status);
-
-    const matchesType =
-      selectedTypes.length === 0 || selectedTypes.includes(device.device);
-
-    const matchesSearch =
-      device.device.toLowerCase().includes(search.toLowerCase()) ||
-      device.model.toLowerCase().includes(search.toLowerCase()) ||
-      device.employee.toLowerCase().includes(search.toLowerCase());
-
-    return matchesDept && matchesStatus && matchesType && matchesSearch;
-  });
-
-  */
+  function clearFilters() {
+    setSearch('');
+    setSelectedStatus('all');
+    setSelectedType('all');
   }
+
+  const hasActiveFilters =
+    search.trim() !== '' || selectedStatus !== 'all' || selectedType !== 'all';
 
   const filteredDevices = devices.filter((device) => {
     const matchesStatus =
@@ -216,6 +203,11 @@ function App() {
                     </SelectContent>
                   </Select>
                 </Field>
+                {hasActiveFilters && (
+                  <Button variant="default" onClick={clearFilters}>
+                    Clear
+                  </Button>
+                )}
               </div>
               <AddDevice />
             </div>
